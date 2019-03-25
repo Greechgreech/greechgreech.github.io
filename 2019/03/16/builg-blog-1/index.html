@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/greechgreech.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/greechgreech.github.io/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/greechgreech.github.io/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/greechgreech.github.io/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/greechgreech.github.io/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/greechgreech.github.io/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/greechgreech.github.io/',
+    scheme: 'Muse',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="新鲜出炉的博客! 今天上午刚刚搭好自己的博客,特兴奋. 由于自己毫无技术背景,搭博客这过程极为艰辛,走了不少弯路,一度想放弃. 特写下这篇文章以激励那些还在路上摸索的人们:我都能搞定的事情,你们一定可以. 我是用Docker + hexo + github来完成这一过程的,三者的关系如下:从docker上拉取镜像生成容器,容器里含有安装hexo所需的应用:Node.js与Git(Docker的好处">
+<meta name="keywords" content="hexo,docker,blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo + docker + github搭自己的博客">
+<meta property="og:url" content="http://github.com/greechgreech/greechgreech.github.io/2019/03/16/builg-blog-1/index.html">
+<meta property="og:site_name" content="Mil">
+<meta property="og:description" content="新鲜出炉的博客! 今天上午刚刚搭好自己的博客,特兴奋. 由于自己毫无技术背景,搭博客这过程极为艰辛,走了不少弯路,一度想放弃. 特写下这篇文章以激励那些还在路上摸索的人们:我都能搞定的事情,你们一定可以. 我是用Docker + hexo + github来完成这一过程的,三者的关系如下:从docker上拉取镜像生成容器,容器里含有安装hexo所需的应用:Node.js与Git(Docker的好处">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://github.com/greechgreech.github.io/2019/03/16/builg-blog-1/image_title.png">
+<meta property="og:image" content="http://github.com/greechgreech.github.io/2019/03/16/builg-blog-1/image_detail.png">
+<meta property="og:image" content="http://github.com/greechgreech.github.io/2019/03/16/builg-blog-1/run.png">
+<meta property="og:updated_time" content="2019-03-25T09:12:39.517Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo + docker + github搭自己的博客">
+<meta name="twitter:description" content="新鲜出炉的博客! 今天上午刚刚搭好自己的博客,特兴奋. 由于自己毫无技术背景,搭博客这过程极为艰辛,走了不少弯路,一度想放弃. 特写下这篇文章以激励那些还在路上摸索的人们:我都能搞定的事情,你们一定可以. 我是用Docker + hexo + github来完成这一过程的,三者的关系如下:从docker上拉取镜像生成容器,容器里含有安装hexo所需的应用:Node.js与Git(Docker的好处">
+<meta name="twitter:image" content="http://github.com/greechgreech.github.io/2019/03/16/builg-blog-1/image_title.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://github.com/greechgreech/greechgreech.github.io/2019/03/16/builg-blog-1/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>hexo + docker + github搭自己的博客 | Mil</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/greechgreech.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mil</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">is the name born beside a tiny pond crowded with turtles.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/greechgreech.github.io/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/greechgreech.github.io/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://github.com/greechgreech/greechgreech.github.io/greechgreech.github.io/2019/03/16/builg-blog-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mil">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/greechgreech.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mil">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">hexo + docker + github搭自己的博客
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-17 00:00:00" itemprop="dateCreated datePublished" datetime="2019-03-17T00:00:00+08:00">2019-03-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-25 17:12:39" itemprop="dateModified" datetime="2019-03-25T17:12:39+08:00">2019-03-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/greechgreech.github.io/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>新鲜出炉的博客! 今天上午刚刚搭好自己的博客,特兴奋. 由于自己毫无技术背景,搭博客这过程极为艰辛,走了不少弯路,一度想放弃. 特写下这篇文章以激励那些还在路上摸索的人们:我都能搞定的事情,你们一定可以. 我是用Docker + hexo + github来完成这一过程的,三者的关系如下:从docker上拉取镜像生成容器,容器里含有安装hexo所需的应用:Node.js与Git(Docker的好处在于不用在自己电脑上安装这些应用了).hexo是博客生成框架,用来生成肉眼可见的静态网页(就是现在看到的页面).用hexo生成了静态网页之后,将其托管给github,生成github page,这样别人都能访问啦. 相关概念如下:<br><a href="https://en.wikipedia.org/wiki/Docker_software&quot;docker&quot;" target="_blank" rel="noopener">Docker</a><br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">hexo</a><br><a href="https://pages.github.com/" target="_blank" rel="noopener">github page</a> </p>
+<p>本文接下来将从三个部分记录博客搭建过程: </p>
+<ol>
+<li>前期准备 </li>
+<li>博客生成阶段 </li>
+<li>创建github page </li>
+</ol>
+<h1 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h1><h3 id="下载docker"><a href="#下载docker" class="headerlink" title="下载docker"></a>下载docker</h3><p>这儿有<a href="https://docs.docker.com/get-started/" title="docker_document" target="_blank" rel="noopener">Docker官方文档</a>,上面有详细指引,跟着一步一步走就ok啦.个人的话注意下载CE版本. </p>
+<h3 id="注册一个github帐号-创建blog托管的仓库”"><a href="#注册一个github帐号-创建blog托管的仓库”" class="headerlink" title="注册一个github帐号,创建blog托管的仓库”"></a>注册一个github帐号,创建blog托管的仓库”</h3><p>这一步我是跟着简书上的大神做的:<a href="https://www.jianshu.com/p/4eaddcbe4d12" title="jianshu" target="_blank" rel="noopener">dimsky:5分钟搭建免费个人博客</a>,其中1.1,1.2就是这一过程. </p>
+<p>#博客生成阶段<br>这一步为博客生成阶段,也是本文的核心.具体过程是从dockerhub上下载一个hexo镜像(image),并用该镜像生成容器(container),再用这个容器完成博客的生成,部署等工作. 上述过程都是在terminal里完成,对于像我一样才接触programming的小白来说,看见各种命令都懵了.因此在这儿贴出<a href="https://docs.docker.com/engine/reference/commandline/run/" title="docker_CLI" target="_blank" rel="noopener">docker</a>和<a href="https://hexo.io/zh-cn/docs/commands" title="hexo_command" target="_blank" rel="noopener">hexo</a>的操作命令,下面所有的命令都能在这两个文档里找到. </p>
+<p>###从docker hub上拉取(pull)镜像<br>这一步我踩坑无数次.试了好多都不能用.最后我用的这个镜像:<a href="https://hub.docker.com/r/spurin/hexo" title="image" target="_blank" rel="noopener">spurin/hexo</a>.这个镜像的overview还写得特别详细!特棒!<br>下面是命令:<br><code>sudo docker pull spurin/hexo</code><br>接下来可以通过:<br><code>sudo docker image ls</code><br>来查看image,如下图所示:<br><img src="/greechgreech.github.io/2019/03/16/builg-blog-1/image_title.png"><br><img src="/greechgreech.github.io/2019/03/16/builg-blog-1/image_detail.png"></p>
+<p>###运行docker 容器(参考spurin/hexo overview)<br><code>sudo docker create --name=hexo-domain.com \ -e HEXO_SERVER_PORT=4000 \ -v /blog/domain.com:/app \ -p 4000:4000 spurin/hexo</code><br>这儿的-v /blog/domain.com:/app 代表将本地地址映射到容器的app地址.通过查看官方文档:<br><img src="/greechgreech.github.io/2019/03/16/builg-blog-1/run.png"><br>解释很形象:将一卷东西钉在一起,也就是说将/blog/domain.com和/app这俩地址钉在一起. 这儿 -p 4000:4000 表示将容器4000端口映射到本地4000端口. </p>
+<h3 id="开启容器"><a href="#开启容器" class="headerlink" title="开启容器:"></a>开启容器:</h3><p><code>sudo docker start hexo-domain.com</code><br>开启容器后,可以通过:<br><code>sudo docker container ls</code><br>来查看. 此时打开刚刚自己设的文件地址/blog/domain.com,可以看见以下文件夹:<br></p>
+<h3 id="更改博客设置"><a href="#更改博客设置" class="headerlink" title="更改博客设置"></a>更改博客设置</h3><p>在刚刚的文件中,找到_config.yml并打开,根据需求修改博客设置,这儿参考hexo文档中<a href="https://hexo.io/zh-cn/docs/configuration" title="configure" target="_blank" rel="noopener">配置</a>部分.<br>提示: 本容器默认的deployment部分长这样:<br>deploy:<br>type:<br>需要自行补充三行:<br>deploy:<br>type: git<br>repo: <a href="https://github.com/username/username.github.io.git">https://github.com/username/username.github.io.git</a><br>branch: master<br>message: </p>
+<h3 id="更改主题"><a href="#更改主题" class="headerlink" title="更改主题"></a>更改主题</h3><p>如需更改主题,参考spurin/hexo overview中 install a theme部分. </p>
+<h3 id="安装hexo-deployer-git"><a href="#安装hexo-deployer-git" class="headerlink" title="安装hexo-deployer-git"></a>安装hexo-deployer-git</h3><p><code>sudo docker exec -it hexo-domain.com npm install hexo-deployer-git --save</code><br>我当时在这儿卡了好久.上一步在_config.yml中将deploy type 改为了git,在下一步部署中terminal一直提示找不到git,原因就是少了这一步. </p>
+<p>###生成静态网页并部署到github上<br><code>sudo docker exec -it hexo-domain.com hexo generate</code><br><code>sudo docker exec -it hexo-domain.com hexo deploy</code><br>第二条命令后会让输入github的用户名跟密码. 此时登录github,找到刚刚建立的blog托管仓库,就能看见博客的东西啦! </p>
+<p>#创建github page<br>我们的终极目标是通过 <a href="https://usename.github.io" target="_blank" rel="noopener">https://usename.github.io</a> 能够访问博客,这就需要通过<a href="https://pages.github.com/" title="github_page" target="_blank" rel="noopener">github page</a>为博客创建站点(site).这是我的理解,可能不太准确. 首先进入github 装blog的仓库里,点击setting,如图:<br>{ %asset_img git_rep_setting.png %}<br>setting在右下角. 接着找到github page部分,先选择一个主题,接着把source选为master(与_config.yml中保持一致).hexo官文中推荐用published,但github page上显示个人只能用master.<br>{ % asset_img git_page.png %}<br>大功告成,现在应该就可以通过 <a href="https://usename.github.io" target="_blank" rel="noopener">https://usename.github.io</a> 能够访问博客啦!祝好运!</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/greechgreech.github.io/tags/hexo/" rel="tag"># hexo</a>
+          
+            <a href="/greechgreech.github.io/tags/docker/" rel="tag"># docker</a>
+          
+            <a href="/greechgreech.github.io/tags/blog/" rel="tag"># blog</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Mil</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/greechgreech.github.io/archives/">
+                
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前期准备"><span class="nav-number">1.</span> <span class="nav-text">前期准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载docker"><span class="nav-number">1.0.1.</span> <span class="nav-text">下载docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册一个github帐号-创建blog托管的仓库”"><span class="nav-number">1.0.2.</span> <span class="nav-text">注册一个github帐号,创建blog托管的仓库”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启容器"><span class="nav-number">1.0.3.</span> <span class="nav-text">开启容器:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改博客设置"><span class="nav-number">1.0.4.</span> <span class="nav-text">更改博客设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改主题"><span class="nav-number">1.0.5.</span> <span class="nav-text">更改主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装hexo-deployer-git"><span class="nav-number">1.0.6.</span> <span class="nav-text">安装hexo-deployer-git</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mil</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/greechgreech.github.io/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/greechgreech.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/greechgreech.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/greechgreech.github.io/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/greechgreech.github.io/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/greechgreech.github.io/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/greechgreech.github.io/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/greechgreech.github.io/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/greechgreech.github.io/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
